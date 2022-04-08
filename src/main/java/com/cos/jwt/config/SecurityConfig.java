@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.web.filter.CorsFilter;
 
+import com.cos.jwt.config.jwt.JwtAuthenticationFilter;
 import com.cos.jwt.filter.MyFilter1;
 import com.cos.jwt.filter.MyFilter3;
 
@@ -30,6 +31,7 @@ protected void configure(HttpSecurity http) throws Exception {
 	.addFilter(corsFilter) // 모든 요청은 corsFilter를 탄다, @CrossOrigin(인증X), 시큐리티 필터에 등록 인증(O)
 	.formLogin().disable()
 	.httpBasic().disable()
+	.addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManger
 	.authorizeRequests()
 	.antMatchers("api/v1/user/**")
 	.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
