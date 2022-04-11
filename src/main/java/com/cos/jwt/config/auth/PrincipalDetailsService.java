@@ -10,7 +10,7 @@ import com.cos.jwt.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-// http://localhost8080/login
+// http://localhost8080/login => 여기서 동작을 안한다.
 @Service
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService{
