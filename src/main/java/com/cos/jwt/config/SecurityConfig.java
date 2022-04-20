@@ -13,6 +13,7 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.web.filter.CorsFilter;
 
 import com.cos.jwt.config.jwt.JwtAuthenticationFilter;
+import com.cos.jwt.config.jwt.JwtAuthorizationFilter;
 import com.cos.jwt.filter.MyFilter1;
 import com.cos.jwt.filter.MyFilter3;
 
@@ -32,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 @Override
 protected void configure(HttpSecurity http) throws Exception {
-	http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
+	//http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
 	http.csrf().disable();
 	http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않겠다는 것(stateless 서버로 만듬)
 	.and()
@@ -40,12 +41,13 @@ protected void configure(HttpSecurity http) throws Exception {
 	.formLogin().disable()
 	.httpBasic().disable()
 	.addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManger
+	.addFilter(new JwtAuthorizationFilter(authenticationManager())) // AuthenticationManger
 	.authorizeRequests()
-	.antMatchers("api/v1/user/**")
+	.antMatchers("/api/v1/user/**")
 	.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-	.antMatchers("api/v1/manager/**")
+	.antMatchers("/api/v1/manager/**")
 	.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-	.antMatchers("api/v1/admin/**")
+	.antMatchers("/api/v1/admin/**")
 	.access("hasRole('ROLE_ADMIN')")
 	.anyRequest().permitAll(); // 다른 요청은 전부 권한없이 들어갈 수 있다.
 }
