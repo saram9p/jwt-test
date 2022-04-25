@@ -81,8 +81,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.withExpiresAt(new Date(System.currentTimeMillis()+(60000*10))) // 만료시간, 토큰이 언제까지 끝날지 유효한지를 결정
 				.withClaim("id", principalDetails.getUser().getId()) // withClaim은 비공개 클레임
 				.withClaim("username", principalDetails.getUser().getUsername())
-				.sign(Algorithm.HMAC512("cos")); // SECRET은 내 서버만 아는 고유한 값
+				.sign(Algorithm.HMAC512(JwtProperties.SECRET)); // SECRET은 내 서버만 아는 고유한 값
 		
-		response.addHeader("Authorization", "Bearer "+jwtToken); // Authorization가 헤더에 담겨서 사용자한테 응답이 된다.
+		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken); // Authorization가 헤더에 담겨서 사용자한테 응답이 된다.
 	}
 }

@@ -16,6 +16,7 @@ import com.cos.jwt.config.jwt.JwtAuthenticationFilter;
 import com.cos.jwt.config.jwt.JwtAuthorizationFilter;
 import com.cos.jwt.filter.MyFilter1;
 import com.cos.jwt.filter.MyFilter3;
+import com.cos.jwt.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final CorsFilter corsFilter;
+	private final UserRepository userRepository;
 	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -41,7 +43,7 @@ protected void configure(HttpSecurity http) throws Exception {
 	.formLogin().disable()
 	.httpBasic().disable()
 	.addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManger
-	.addFilter(new JwtAuthorizationFilter(authenticationManager())) // AuthenticationManger
+	.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository)) // AuthenticationManger
 	.authorizeRequests()
 	.antMatchers("/api/v1/user/**")
 	.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
